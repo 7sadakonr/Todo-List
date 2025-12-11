@@ -1,5 +1,3 @@
-ได้เลยครับ นี่คือโค้ด Markdown ทั้งหมด คุณสามารถกดปุ่ม Copy แล้วนำไปวางทับในไฟล์ `README.md` ได้เลยครับ
-
 ````markdown
 # Integrated Task Management System
 
