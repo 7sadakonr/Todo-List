@@ -1,4 +1,4 @@
-````markdown
+
 # Integrated Task Management System
 
 A comprehensive Full-Stack Web Application designed for efficient task tracking and management. This project demonstrates the integration of modern web technologies, featuring secure user authentication, interactive data visualization, and a responsive user interface.
