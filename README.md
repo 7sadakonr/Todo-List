@@ -1,3 +1,6 @@
+ได้เลยครับ นี่คือโค้ด Markdown ทั้งหมด คุณสามารถกดปุ่ม Copy แล้วนำไปวางทับในไฟล์ `README.md` ได้เลยครับ
+
+````markdown
 # Integrated Task Management System
 
 A comprehensive Full-Stack Web Application designed for efficient task tracking and management. This project demonstrates the integration of modern web technologies, featuring secure user authentication, interactive data visualization, and a responsive user interface.
@@ -65,9 +68,31 @@ Todo-List/
 │   └── package.json
 │
 └── README.md
-Installation and SetupPrerequisitesEnsure the following are installed on your local machine:Node.js (Version 18 or higher)PostgreSQL Databasenpm or yarn package manager1. Clone the RepositoryBashgit clone [https://github.com/7sadakonr/Todo-List.git](https://github.com/7sadakonr/Todo-List.git)
+````
+
+-----
+
+## Installation and Setup
+
+### Prerequisites
+
+Ensure the following are installed on your local machine:
+
+  * Node.js (Version 18 or higher)
+  * PostgreSQL Database
+  * npm or yarn package manager
+
+### 1\. Clone the Repository
+
+```bash
+git clone [https://github.com/7sadakonr/Todo-List.git](https://github.com/7sadakonr/Todo-List.git)
 cd Todo-List
-2. Backend ConfigurationBashcd server
+```
+
+### 2\. Backend Configuration
+
+```bash
+cd server
 
 # Install dependencies
 npm install
@@ -82,11 +107,68 @@ npx prisma db push
 
 # Start the Server
 npm start
-3. Frontend ConfigurationBashcd my-app
+```
+
+### 3\. Frontend Configuration
+
+```bash
+cd my-app
 
 # Install dependencies
 npm install
 
 # Start Development Server
 npm run dev
-4. Access the ApplicationOpen your web browser and navigate to: http://localhost:3000API DocumentationUser ManagementMethodEndpointDescriptionPOST/members/signupRegister a new user accountPOST/members/signinAuthenticate user and retrieve tokenGET/members/infoRetrieve authenticated user detailsPUT/members/updateUpdate user profile informationTask OperationsMethodEndpointDescriptionPOST/todo/createInitialize a new taskGET/todo/listRetrieve all tasks associated with the userPUT/todo/update/:idModify an existing task contentDELETE/todo/remove/:idPermanently remove a taskPUT/todo/updateStatus/:idToggle task completion statusGET/todo/filter/:statusRetrieve tasks filtered by specific statusGET/todo/dashboardRetrieve statistical data for the dashboardDeployment StatusFrontend: Deployed on VercelBackend: Hosted on RenderDatabase: Managed by Neon (PostgreSQL)LicenseThis project is open-source and licensed under the MIT License.Developed By7sadakonr
+```
+
+### 4\. Access the Application
+
+Open your web browser and navigate to: [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000)
+
+-----
+
+## API Documentation
+
+### User Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/members/signup` | Register a new user account |
+| POST | `/members/signin` | Authenticate user and retrieve token |
+| GET | `/members/info` | Retrieve authenticated user details |
+| PUT | `/members/update` | Update user profile information |
+
+### Task Operations
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/todo/create` | Initialize a new task |
+| GET | `/todo/list` | Retrieve all tasks associated with the user |
+| PUT | `/todo/update/:id` | Modify an existing task content |
+| DELETE | `/todo/remove/:id` | Permanently remove a task |
+| PUT | `/todo/updateStatus/:id` | Toggle task completion status |
+| GET | `/todo/filter/:status` | Retrieve tasks filtered by specific status |
+| GET | `/todo/dashboard` | Retrieve statistical data for the dashboard |
+
+-----
+
+## Deployment Status
+
+  * **Frontend:** Deployed on [Vercel](https://vercel.com)
+  * **Backend:** Hosted on [Render](https://render.com)
+  * **Database:** Managed by [Neon](https://neon.tech) (PostgreSQL)
+
+-----
+
+## License
+
+This project is open-source and licensed under the [MIT License](https://www.google.com/search?q=LICENSE).
+
+-----
+
+## Developed By
+
+**7sadakonr**
+
+```
+```
