@@ -14,8 +14,8 @@ export default function Todo() {
   const [countWait, setCountWait] = useState(0)
   const [countDoing, setCountDoing] = useState(0)
   const [countSuccess, setCountSuccess] = useState(0)
-  const [draggedItem, setDraggedItem] = useState(null)
-  const [draggedOverColumn, setDraggedOverColumn] = useState(null)
+  const [draggedItem, setDraggedItem] = useState<{ id: number, name: string, remark: string, status: string } | null>(null)
+  const [draggedOverColumn, setDraggedOverColumn] = useState<string | null>(null)
   const [dragStartX, setDragStartX] = useState(0)
   const [saving, setSaving] = useState(false)
   const formRef = useRef<HTMLDivElement>(null)
@@ -207,7 +207,7 @@ export default function Todo() {
   }
 
   const getTodosByStatus = (filterStatus: string) => {
-    return getFilteredTodos().filter((t: any) => 
+    return getFilteredTodos().filter((t: any) =>
       filterStatus === 'wait' ? (t.status === 'wait' || t.status === 'use') : t.status === filterStatus
     )
   }
@@ -223,16 +223,16 @@ export default function Todo() {
   const handleDragEnd = (e: React.DragEvent) => {
     if (window.innerWidth < 640) return
     const draggingElement = e.currentTarget as HTMLElement
-    
+
     draggingElement.classList.remove('dragging')
     draggingElement.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
     draggingElement.style.transform = 'rotate(0deg) scale(1)'
-    
+
     setTimeout(() => {
       draggingElement.style.transition = ''
       draggingElement.style.transform = ''
     }, 200)
-    
+
     setDraggedItem(null)
     setDraggedOverColumn(null)
     setDragStartX(0)
@@ -242,13 +242,13 @@ export default function Todo() {
     if (window.innerWidth < 640) return
     e.preventDefault()
     e.dataTransfer.dropEffect = 'move'
-    
+
     if (draggedItem) {
       const draggingElement = document.querySelector('.dragging') as HTMLElement
       if (draggingElement) {
         const horizontalDiff = e.clientX - dragStartX
         const tiltAngle = Math.max(-15, Math.min(15, horizontalDiff * 0.1))
-        
+
         draggingElement.style.transform = `rotate(${tiltAngle}deg) scale(1.05)`
       }
     }
@@ -271,16 +271,16 @@ export default function Todo() {
     if (window.innerWidth < 640) return
     e.preventDefault()
     setDraggedOverColumn(null)
-    
+
     if (draggedItem && draggedItem.status !== targetStatus) {
       let apiStatus = targetStatus
       if (targetStatus === 'wait') {
         apiStatus = 'use'
       }
-      
+
       await updateStatus(draggedItem.id, apiStatus)
     }
-    
+
     setDraggedItem(null)
     setDragStartX(0)
   }
@@ -404,7 +404,7 @@ export default function Todo() {
                 <span className="text-red-400">*</span>
               </label>
               <div className="relative">
-                <input 
+                <input
                   className="w-full px-4 sm:px-5 py-3 sm:py-3.5 text-sm sm:text-base bg-white/[0.08] backdrop-blur-xl border border-white/20 rounded-[14px] sm:rounded-[18px] text-white placeholder-white/35 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/30 transition-all duration-300 group-hover/input:bg-white/[0.12]"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -427,7 +427,7 @@ export default function Todo() {
                 หมายเหตุ
               </label>
               <div className="relative">
-                <textarea 
+                <textarea
                   className="w-full min-h-[92px] sm:min-h-[110px] px-4 sm:px-5 py-3 sm:py-3.5 text-sm sm:text-base bg-white/[0.08] backdrop-blur-xl border border-white/20 rounded-[14px] sm:rounded-[18px] text-white placeholder-white/35 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/30 transition-all duration-300 group-hover/input:bg-white/[0.12] resize-none"
                   value={remark}
                   onChange={(e) => setRemark(e.target.value)}
@@ -440,7 +440,7 @@ export default function Todo() {
 
             {/* Action Buttons */}
             <div className="flex gap-2 sm:gap-3 pt-2 sm:pt-4">
-              <button 
+              <button
                 onClick={handleSave}
                 disabled={saving || !name.trim()}
                 className="relative flex-1 px-4 sm:px-6 py-3 sm:py-4 bg-white/15 backdrop-blur-xl border border-white/30 rounded-[14px] sm:rounded-[18px] text-white font-semibold text-sm sm:text-base hover:bg-white/20 hover:shadow-[0_12px_40px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.1)] transition-all duration-300 group overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.1)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -462,7 +462,7 @@ export default function Todo() {
               </button>
 
               {id !== 0 && (
-                <button 
+                <button
                   onClick={handleClear}
                   disabled={saving}
                   className="relative px-4 sm:px-6 py-3 sm:py-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-[14px] sm:rounded-[18px] text-white/80 font-semibold text-sm sm:text-base hover:bg-white/15 hover:border-white/30 hover:text-white hover:shadow-[0_8px_24px_rgba(255,255,255,0.1)] transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -479,9 +479,9 @@ export default function Todo() {
 
         {/* Columns Grid */}
         <div className="mt-4 sm:mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
-          
+
           {/* === Wait Column === */}
-          <div 
+          <div
             className={`
               drop-zone flex flex-col gap-3 sm:gap-4 rounded-[24px] relative overflow-visible
               ${draggedOverColumn === 'wait' ? 'drag-over-wait' : ''}
@@ -502,11 +502,11 @@ export default function Todo() {
                 </span>
               </div>
             </div>
-            
+
             <div className="relative z-10 flex flex-col gap-1 sm:gap-3 min-h-[120px] px-1 sm:px-2 pb-2">
               {getTodosByStatus('wait').map((item: { id: number, name: string, remark: string, status: string }) => (
-                <div 
-                  key={item.id} 
+                <div
+                  key={item.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, item)}
                   onDragEnd={handleDragEnd}
@@ -516,29 +516,29 @@ export default function Todo() {
                     <i className="fa fa-grip-vertical text-amber-400/60 text-xs sm:text-sm"></i>
                   </div>
                   <div className="absolute inset-0 rounded-[16px] sm:rounded-[20px] bg-gradient-to-br from-amber-500/0 via-amber-500/0 to-amber-500/0 group-hover:from-amber-500/10 group-hover:via-amber-500/5 group-hover:to-amber-500/0 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
-                  
+
                   <div className="flex flex-col gap-2 sm:gap-3 relative z-10">
                     <div>
                       <h4 className="text-white/90 font-semibold mb-1 text-sm sm:text-base group-hover:text-amber-100/90 transition-colors duration-300 break-words">{item.name}</h4>
                       <p className="text-white/60 text-xs sm:text-sm group-hover:text-white/75 transition-colors duration-300 break-words whitespace-pre-wrap">{item.remark}</p>
                     </div>
-                    
+
                     {/* Desktop buttons */}
                     <div className="hidden sm:flex gap-2 flex-wrap">
-                      <button 
-                        onClick={() => updateStatus(item.id, 'doing')} 
+                      <button
+                        onClick={() => updateStatus(item.id, 'doing')}
                         className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-[8px] sm:rounded-[10px] hover:bg-blue-500/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300"
                       >
                         → กำลังทำ
                       </button>
-                      <button 
-                        onClick={() => handleEdit(item)} 
+                      <button
+                        onClick={() => handleEdit(item)}
                         className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-white/10 border border-white/20 text-white rounded-[8px] sm:rounded-[10px] hover:bg-white/20 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300"
                       >
                         <i className="fa fa-pencil"></i>
                       </button>
-                      <button 
-                        onClick={() => handleRemove(item.id)} 
+                      <button
+                        onClick={() => handleRemove(item.id)}
                         className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-red-500/20 border border-red-400/30 text-red-300 rounded-[8px] sm:rounded-[10px] hover:bg-red-500/30 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all duration-300"
                       >
                         <i className="fa fa-times"></i>
@@ -547,20 +547,20 @@ export default function Todo() {
 
                     {/* Mobile buttons */}
                     <div className="flex sm:hidden gap-2 flex-wrap">
-                      <button 
-                        onClick={() => updateStatus(item.id, 'doing')} 
+                      <button
+                        onClick={() => updateStatus(item.id, 'doing')}
                         className="flex-1 px-2 py-2 text-xs bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-[8px] hover:bg-blue-500/30 transition-all duration-300"
                       >
                         → กำลังทำ
                       </button>
-                      <button 
-                        onClick={() => handleEdit(item)} 
+                      <button
+                        onClick={() => handleEdit(item)}
                         className="px-2 py-2 text-xs bg-white/10 border border-white/20 text-white rounded-[8px] hover:bg-white/20 transition-all duration-300"
                       >
                         <i className="fa fa-pencil"></i>
                       </button>
-                      <button 
-                        onClick={() => handleRemove(item.id)} 
+                      <button
+                        onClick={() => handleRemove(item.id)}
                         className="px-2 py-2 text-xs bg-red-500/20 border border-red-400/30 text-red-300 rounded-[8px] hover:bg-red-500/30 transition-all duration-300"
                       >
                         <i className="fa fa-times"></i>
@@ -569,7 +569,7 @@ export default function Todo() {
                   </div>
                 </div>
               ))}
-              
+
               {getTodosByStatus('wait').length === 0 && (
                 <div className="relative bg-white/[0.05] backdrop-blur-xl border border-white/10 rounded-[16px] sm:rounded-[20px] p-6 sm:p-8 text-center">
                   <i className="fa fa-inbox text-2xl sm:text-3xl text-white/30 mb-2"></i>
@@ -580,7 +580,7 @@ export default function Todo() {
           </div>
 
           {/* === Doing Column === */}
-          <div 
+          <div
             className={`
               drop-zone flex flex-col gap-3 sm:gap-4 rounded-[24px] relative overflow-visible
               ${draggedOverColumn === 'doing' ? 'drag-over-doing' : ''}
@@ -601,11 +601,11 @@ export default function Todo() {
                 </span>
               </div>
             </div>
-            
+
             <div className="relative z-10 flex flex-col gap-1 sm:gap-3 min-h-[120px] px-1 sm:px-2 pb-2">
               {getTodosByStatus('doing').map((item: { id: number, name: string, remark: string, status: string }) => (
-                <div 
-                  key={item.id} 
+                <div
+                  key={item.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, item)}
                   onDragEnd={handleDragEnd}
@@ -615,35 +615,35 @@ export default function Todo() {
                     <i className="fa fa-grip-vertical text-blue-400/60 text-xs sm:text-sm"></i>
                   </div>
                   <div className="absolute inset-0 rounded-[16px] sm:rounded-[20px] bg-gradient-to-br from-blue-500/0 via-blue-500/0 to-blue-500/0 group-hover:from-blue-500/10 group-hover:via-blue-500/5 group-hover:to-blue-500/0 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
-                  
+
                   <div className="flex flex-col gap-2 sm:gap-3 relative z-10">
                     <div>
                       <h4 className="text-white/90 font-semibold mb-1 text-sm sm:text-base group-hover:text-blue-100/90 transition-colors duration-300 break-words">{item.name}</h4>
                       <p className="text-white/60 text-xs sm:text-sm group-hover:text-white/75 transition-colors duration-300 break-words whitespace-pre-wrap">{item.remark}</p>
                     </div>
-                    
+
                     {/* Desktop buttons */}
                     <div className="hidden sm:flex gap-2 flex-wrap">
-                      <button 
-                        onClick={() => updateStatus(item.id, 'use')} 
+                      <button
+                        onClick={() => updateStatus(item.id, 'use')}
                         className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-amber-500/20 border border-amber-400/30 text-amber-300 rounded-[8px] sm:rounded-[10px] hover:bg-amber-500/30 hover:shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all duration-300"
                       >
                         ← รอทำ
                       </button>
-                      <button 
-                        onClick={() => updateStatus(item.id, 'success')} 
+                      <button
+                        onClick={() => updateStatus(item.id, 'success')}
                         className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 rounded-[8px] sm:rounded-[10px] hover:bg-emerald-500/30 hover:shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all duration-300"
                       >
                         → เสร็จ
                       </button>
-                      <button 
-                        onClick={() => handleEdit(item)} 
+                      <button
+                        onClick={() => handleEdit(item)}
                         className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-white/10 border border-white/20 text-white rounded-[8px] sm:rounded-[10px] hover:bg-white/20 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300"
                       >
                         <i className="fa fa-pencil"></i>
                       </button>
-                      <button 
-                        onClick={() => handleRemove(item.id)} 
+                      <button
+                        onClick={() => handleRemove(item.id)}
                         className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-red-500/20 border border-red-400/30 text-red-300 rounded-[8px] sm:rounded-[10px] hover:bg-red-500/30 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all duration-300"
                       >
                         <i className="fa fa-times"></i>
@@ -652,26 +652,26 @@ export default function Todo() {
 
                     {/* Mobile buttons */}
                     <div className="flex sm:hidden gap-2 flex-wrap">
-                      <button 
-                        onClick={() => updateStatus(item.id, 'use')} 
+                      <button
+                        onClick={() => updateStatus(item.id, 'use')}
                         className="flex-1 px-2 py-2 text-xs bg-amber-500/20 border border-amber-400/30 text-amber-300 rounded-[8px] hover:bg-amber-500/30 transition-all duration-300"
                       >
                         ← รอทำ
                       </button>
-                      <button 
-                        onClick={() => updateStatus(item.id, 'success')} 
+                      <button
+                        onClick={() => updateStatus(item.id, 'success')}
                         className="flex-1 px-2 py-2 text-xs bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 rounded-[8px] hover:bg-emerald-500/30 transition-all duration-300"
                       >
                         → เสร็จ
                       </button>
-                      <button 
-                        onClick={() => handleEdit(item)} 
+                      <button
+                        onClick={() => handleEdit(item)}
                         className="px-2 py-2 text-xs bg-white/10 border border-white/20 text-white rounded-[8px] hover:bg-white/20 transition-all duration-300"
                       >
                         <i className="fa fa-pencil"></i>
                       </button>
-                      <button 
-                        onClick={() => handleRemove(item.id)} 
+                      <button
+                        onClick={() => handleRemove(item.id)}
                         className="px-2 py-2 text-xs bg-red-500/20 border border-red-400/30 text-red-300 rounded-[8px] hover:bg-red-500/30 transition-all duration-300"
                       >
                         <i className="fa fa-times"></i>
@@ -680,7 +680,7 @@ export default function Todo() {
                   </div>
                 </div>
               ))}
-              
+
               {getTodosByStatus('doing').length === 0 && (
                 <div className="relative bg-white/[0.05] backdrop-blur-xl border border-white/10 rounded-[16px] sm:rounded-[20px] p-6 sm:p-8 text-center">
                   <i className="fa fa-inbox text-2xl sm:text-3xl text-white/30 mb-2"></i>
@@ -691,7 +691,7 @@ export default function Todo() {
           </div>
 
           {/* === Success Column === */}
-          <div 
+          <div
             className={`
               drop-zone flex flex-col gap-3 sm:gap-4 rounded-[24px] relative overflow-visible
               ${draggedOverColumn === 'success' ? 'drag-over-success' : ''}
@@ -712,11 +712,11 @@ export default function Todo() {
                 </span>
               </div>
             </div>
-            
+
             <div className="relative z-10 flex flex-col gap-1 sm:gap-3 min-h-[120px] px-1 sm:px-2 pb-2">
               {getTodosByStatus('success').map((item: { id: number, name: string, remark: string, status: string }) => (
-                <div 
-                  key={item.id} 
+                <div
+                  key={item.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, item)}
                   onDragEnd={handleDragEnd}
@@ -726,29 +726,29 @@ export default function Todo() {
                     <i className="fa fa-grip-vertical text-emerald-400/60 text-xs sm:text-sm"></i>
                   </div>
                   <div className="absolute inset-0 rounded-[16px] sm:rounded-[20px] bg-gradient-to-br from-emerald-500/0 via-emerald-500/0 to-emerald-500/0 group-hover:from-emerald-500/10 group-hover:via-emerald-500/5 group-hover:to-emerald-500/0 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
-                  
+
                   <div className="flex flex-col gap-2 sm:gap-3 relative z-10">
                     <div>
                       <h4 className="text-white/90 font-semibold mb-1 text-sm sm:text-base group-hover:text-emerald-100/90 transition-colors duration-300 break-words">{item.name}</h4>
                       <p className="text-white/60 text-xs sm:text-sm group-hover:text-white/75 transition-colors duration-300 break-words whitespace-pre-wrap">{item.remark}</p>
                     </div>
-                    
+
                     {/* Desktop buttons */}
                     <div className="hidden sm:flex gap-2 flex-wrap">
-                      <button 
-                        onClick={() => updateStatus(item.id, 'doing')} 
+                      <button
+                        onClick={() => updateStatus(item.id, 'doing')}
                         className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-[8px] sm:rounded-[10px] hover:bg-blue-500/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300"
                       >
                         ← กำลังทำ
                       </button>
-                      <button 
-                        onClick={() => handleEdit(item)} 
+                      <button
+                        onClick={() => handleEdit(item)}
                         className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-white/10 border border-white/20 text-white rounded-[8px] sm:rounded-[10px] hover:bg-white/20 hover:border-white/40 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300"
                       >
                         <i className="fa fa-pencil"></i>
                       </button>
-                      <button 
-                        onClick={() => handleRemove(item.id)} 
+                      <button
+                        onClick={() => handleRemove(item.id)}
                         className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-red-500/20 border border-red-400/30 text-red-300 rounded-[8px] sm:rounded-[10px] hover:bg-red-500/30 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all duration-300"
                       >
                         <i className="fa fa-times"></i>
@@ -757,20 +757,20 @@ export default function Todo() {
 
                     {/* Mobile buttons */}
                     <div className="flex sm:hidden gap-2 flex-wrap">
-                      <button 
-                        onClick={() => updateStatus(item.id, 'doing')} 
+                      <button
+                        onClick={() => updateStatus(item.id, 'doing')}
                         className="flex-1 px-2 py-2 text-xs bg-blue-500/20 border border-blue-400/30 text-blue-300 rounded-[8px] hover:bg-blue-500/30 transition-all duration-300"
                       >
                         ← กำลังทำ
                       </button>
-                      <button 
-                        onClick={() => handleEdit(item)} 
+                      <button
+                        onClick={() => handleEdit(item)}
                         className="px-2 py-2 text-xs bg-white/10 border border-white/20 text-white rounded-[8px] hover:bg-white/20 transition-all duration-300"
                       >
                         <i className="fa fa-pencil"></i>
                       </button>
-                      <button 
-                        onClick={() => handleRemove(item.id)} 
+                      <button
+                        onClick={() => handleRemove(item.id)}
                         className="px-2 py-2 text-xs bg-red-500/20 border border-red-400/30 text-red-300 rounded-[8px] hover:bg-red-500/30 transition-all duration-300"
                       >
                         <i className="fa fa-times"></i>
@@ -779,7 +779,7 @@ export default function Todo() {
                   </div>
                 </div>
               ))}
-              
+
               {getTodosByStatus('success').length === 0 && (
                 <div className="relative bg-white/[0.05] backdrop-blur-xl border border-white/10 rounded-[16px] sm:rounded-[20px] p-6 sm:p-8 text-center">
                   <i className="fa fa-inbox text-2xl sm:text-3xl text-white/30 mb-2"></i>
@@ -788,7 +788,7 @@ export default function Todo() {
               )}
             </div>
           </div>
-          
+
         </div>
       </div>
     </>
