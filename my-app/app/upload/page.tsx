@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FormEvent, useState } from "react"
 import axios from 'axios'
+import { Config } from '../backoffice/signup/config'
 
 export default function Upload() {
   const [file, setFile] = useState<File | null>(null)
@@ -27,7 +28,7 @@ export default function Upload() {
     formData.append('file', file)
 
     try {
-      const url = 'http://localhost:3001/upload'
+      const url = `${Config.apiUrl}/upload`
       const res = await axios.post<{ message: string }>(url, formData)
 
       if (res.status === 200) {
