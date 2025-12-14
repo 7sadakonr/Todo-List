@@ -10,6 +10,8 @@ A comprehensive Full-Stack Web Application designed for efficient task tracking 
 ## Project Overview
 
 This application facilitates task management through a robust architecture. Users can securely manage their daily tasks with full CRUD (Create, Read, Update, Delete) capabilities. The system includes a dashboard for productivity analytics, utilizing graphical representations to track progress.
+<img width="1579" height="859" alt="image" src="https://github.com/user-attachments/assets/66f1eac9-b64e-4250-a781-6186353f9ec9" />
+
 
 ## Key Features
 
